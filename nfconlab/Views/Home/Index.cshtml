@@ -1,0 +1,82 @@
+﻿@model IEnumerable<nfconlab.Models.QuestionItem>
+
+@{
+    ViewBag.Title = "NFC Önlab";
+}
+
+<h2>NFC Önlab</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Question)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answer1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answer2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answer3)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answer4)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RightAnswer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Image)
+        </th>
+        <th>
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Question)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Answer1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Answer2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Answer3)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Answer4)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RightAnswer)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            <img src="@Html.DisplayFor(modelItem => item.Image)" alt="IMAGE" style="width: 150px; height: 150px;" />
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.QuestionItemId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.QuestionItemId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.QuestionItemId })
+        </td>
+    </tr>
+}
+
+</table>

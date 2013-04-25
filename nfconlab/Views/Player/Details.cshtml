@@ -1,0 +1,36 @@
+﻿@model nfconlab.Models.Player
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Player</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.User_ID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User_ID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Answered)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Answered)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Points)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Points)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.PlayerId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

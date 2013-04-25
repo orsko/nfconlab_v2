@@ -1,0 +1,48 @@
+﻿@model IEnumerable<nfconlab.Models.PlayerItem>
+
+@{
+    ViewBag.Title = "GetPlayers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GetPlayers</h2>
+
+<p>
+    <!--@Html.ActionLink("Create New", "Create")-->
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.User_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Answered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Points)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.User_ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Answered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Points)
+        </td>
+        <!--
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerItemId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PlayerItemId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PlayerItemId })
+        </td>
+        -->
+    </tr>
+}
+
+</table>
