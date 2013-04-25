@@ -19,17 +19,7 @@ namespace nfconlab.Controllers
 
         public ActionResult Index()
         {
-            if (User.IsInRole("admin"))
-                return View(db.Questions.ToList());
-            else
-            {
-                List<QuestionItem> list= db.Questions.ToList();
-                foreach (var q in list)
-                {
-                    q.RightAnswer = "-----";
-                }
-                return View(list);
-            }
+            return View(db.Questions.ToList());           
         }
 
         //
@@ -42,21 +32,12 @@ namespace nfconlab.Controllers
             {
                 return HttpNotFound();
             }
-<<<<<<< HEAD
-            return View(questionitem);
-        }
 
-=======
-            if (User.IsInRole("admin"))
-                return View(questionitem);
-            else{
-                var q = questionitem;
-                q.RightAnswer = "-----";
-                return View(q);
-            }
+            return View(questionitem);
+       
+            
         }                            
-        /*
->>>>>>> e885a6f6e19976a1a42ce5d0aaeed9506bfbc2cd
+        
         //
         // POST: /Player/Identify
         // Segédosztály felhasználó azonosításhoz
@@ -98,8 +79,6 @@ namespace nfconlab.Controllers
                 player = db.Players.FirstOrDefault(p => p.User_ID.Equals(uid));
 
 
-
-
                 if (player != null)
                     return "User identification complete";
                 //Ha nincs, csinálni kell
@@ -113,7 +92,7 @@ namespace nfconlab.Controllers
             //Azonosítási hiba
             return "User identification failed: NULL JSON";
         }
-        */
+        
         //
         // POST: /Player/AddPoint
         //Felhasználói pontszám növelése, valamint kérdés hozzáadása a megválaszoltakhoz
@@ -211,23 +190,14 @@ namespace nfconlab.Controllers
 
                 //Helyes válasz vizsgálata
                 QuestionItem questionitem = db.Questions.Find(id);
-<<<<<<< HEAD
                 string code = "false";
-=======
-                string code="false";
->>>>>>> e885a6f6e19976a1a42ce5d0aaeed9506bfbc2cd
                 //Ha helyes a válasz
                 if (questionitem.RightAnswer.Equals(answer))
                 {
                     //Vissza kell adni, hogy jó
                     code = "true";
                     //Hozzá kell adni a megválaszolt kérdésekhez
-<<<<<<< HEAD
                     AddPoint(questionitem, Session["UserID"]);
-=======
-                    var controller = new PlayerController();
-                    controller.AddPoint(questionitem, Session["UserID"]);
->>>>>>> e885a6f6e19976a1a42ce5d0aaeed9506bfbc2cd
                 }
                 //Következő kérdés, ennek kell visszaadni a pozícióját
                 QuestionItem nextQuestion = db.Questions.Find(id++);

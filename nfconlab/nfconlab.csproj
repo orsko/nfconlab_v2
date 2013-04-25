@@ -163,7 +163,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -183,8 +182,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\PlayerItem.cs" />
-    <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\PlayerDb.cs" />
     <Compile Include="Models\QuestionItem.cs" />
     <Compile Include="Models\QuestionDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
