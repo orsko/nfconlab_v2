@@ -1,4 +1,4 @@
-﻿@model nfconlab.Models.Player
+﻿@model nfconlab.Models.PlayerItem
 
 @{
     ViewBag.Title = "Details";
@@ -31,6 +31,6 @@
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.PlayerId }) |
+    @Html.ActionLink("Edit", "Edit", new { id=Model.PlayerItemId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

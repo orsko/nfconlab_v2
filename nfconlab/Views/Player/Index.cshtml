@@ -1,4 +1,4 @@
-﻿@model IEnumerable<nfconlab.Models.Player>
+﻿@model IEnumerable<nfconlab.Models.PlayerItem>
 
 @{
     ViewBag.Title = "Index";
@@ -35,9 +35,9 @@
             @Html.DisplayFor(modelItem => item.Points)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PlayerId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PlayerId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerItemId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.PlayerItemId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.PlayerItemId })
         </td>
     </tr>
 }

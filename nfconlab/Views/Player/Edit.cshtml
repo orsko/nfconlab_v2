@@ -1,4 +1,4 @@
-﻿@model nfconlab.Models.Player
+﻿@model nfconlab.Models.PlayerItem
 
 @{
     ViewBag.Title = "Edit";
@@ -13,7 +13,7 @@
     <fieldset>
         <legend>Player</legend>
 
-        @Html.HiddenFor(model => model.PlayerId)
+        @Html.HiddenFor(model => model.PlayerItemId)
 
         <div class="editor-label">
             @Html.LabelFor(model => model.User_ID)
