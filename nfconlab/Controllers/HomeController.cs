@@ -97,7 +97,7 @@ namespace nfconlab.Controllers
         // POST: /Player/AddPoint
         //Felhasználói pontszám növelése, valamint kérdés hozzáadása a megválaszoltakhoz
         [HttpPost]
-        public string AddPoint(QuestionItem question, object userId)
+        public PlayerItem AddPoint(QuestionItem question, object userId)
         {
             PlayerItem player = null;
             string uid = (string)userId;
@@ -108,7 +108,7 @@ namespace nfconlab.Controllers
             }
             catch
             {
-                return "Not valid user";
+                return null;
             }
             //Válasz sorszámának hozzáadása a megválaszolt kérdésekhez
             if (player.Answered != null)
@@ -117,7 +117,7 @@ namespace nfconlab.Controllers
             //Pontszám növelése, és mentés
             player.Points += 1;
             db.SaveChanges();
-            return "Added";
+            return player;
         }
 
         //
@@ -125,6 +125,21 @@ namespace nfconlab.Controllers
         //Kérdés lekérése REST API-n keresztül
         public string Questions(int id = 0)
         {
+            //Csak olyan kérdést szabas, mi még nincs megválaszolva
+            PlayerItem player = null;
+            string userId = "";
+            try
+            {
+                userId = (string)Session["UserID"];
+                player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userId));
+                if (player.Answered!=null && player.Answered.Split(',').Contains(id.ToString()))
+                    return "Already answered question";
+            }
+            catch
+            {
+                return userId + "Not identified player";
+            }
+
             //Kérdés lekérése az adatbázisból
             QuestionItem questionitem = db.Questions.Find(id);
             //Azonosító elmentése
@@ -192,16 +207,42 @@ namespace nfconlab.Controllers
                 QuestionItem questionitem = db.Questions.Find(id);
                 string code = "false";
                 //Ha helyes a válasz
+                PlayerItem player = null;
                 if (questionitem.RightAnswer.Equals(answer))
                 {
                     //Vissza kell adni, hogy jó
                     code = "true";
                     //Hozzá kell adni a megválaszolt kérdésekhez
-                    AddPoint(questionitem, Session["UserID"]);
+                    player = AddPoint(questionitem, Session["UserID"]);
                 }
+                else
+                {
+                    string uID = (string)Session["UserID"];
+                    player = db.Players.FirstOrDefault(p => p.User_ID.Equals(uID));
+                }
+
                 //Következő kérdés, ennek kell visszaadni a pozícióját
-                QuestionItem nextQuestion = db.Questions.Find(id++);
-                string nextPos = "0.0,0.0";
+                QuestionItem nextQuestion = null;
+
+                //Megválaszolt kérdések
+                string[] answers = {""};
+                if (player.Answered != null)
+                {
+                    answers = player.Answered.ToString().Split(',');
+                }
+
+                foreach(var q in db.Questions)
+                {
+                    //Ha nem válaszolta még meg és van ilyen kérdés visszaadja
+                    if (!answers.Contains(q.QuestionItemId.ToString()) && q.QuestionItemId != id)
+                    {
+                        nextQuestion = q;
+                        break;
+                    }
+                }
+
+                string nextPos = "0.0,0.0";              
+                
                 if (nextQuestion != null)
                     nextPos = nextQuestion.Location;
 
