@@ -168,17 +168,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201304211459413_Initial.cs" />
-    <Compile Include="Migrations\201304211459413_Initial.Designer.cs">
-      <DependentUpon>201304211459413_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201305011226493_Initial.cs" />
+    <Compile Include="Migrations\201305011226493_Initial.Designer.cs">
+      <DependentUpon>201305011226493_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201304212143351_Initial5.cs" />
-    <Compile Include="Migrations\201304212143351_Initial5.Designer.cs">
-      <DependentUpon>201304212143351_Initial5.cs</DependentUpon>
+    <Compile Include="Migrations\201305011239255_Initial1.cs" />
+    <Compile Include="Migrations\201305011239255_Initial1.Designer.cs">
+      <DependentUpon>201305011239255_Initial1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201304212151041_Initial6.cs" />
-    <Compile Include="Migrations\201304212151041_Initial6.Designer.cs">
-      <DependentUpon>201304212151041_Initial6.cs</DependentUpon>
+    <Compile Include="Migrations\201305011259585_Initial2.cs" />
+    <Compile Include="Migrations\201305011259585_Initial2.Designer.cs">
+      <DependentUpon>201305011259585_Initial2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201305011308167_Initial3.cs" />
+    <Compile Include="Migrations\201305011308167_Initial3.Designer.cs">
+      <DependentUpon>201305011308167_Initial3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201305011310312_Initial4.cs" />
+    <Compile Include="Migrations\201305011310312_Initial4.Designer.cs">
+      <DependentUpon>201305011310312_Initial4.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -320,14 +328,20 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201304211459413_Initial.resx">
-      <DependentUpon>201304211459413_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201305011226493_Initial.resx">
+      <DependentUpon>201305011226493_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201304212143351_Initial5.resx">
-      <DependentUpon>201304212143351_Initial5.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201305011239255_Initial1.resx">
+      <DependentUpon>201305011239255_Initial1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201304212151041_Initial6.resx">
-      <DependentUpon>201304212151041_Initial6.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201305011259585_Initial2.resx">
+      <DependentUpon>201305011259585_Initial2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201305011308167_Initial3.resx">
+      <DependentUpon>201305011308167_Initial3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201305011310312_Initial4.resx">
+      <DependentUpon>201305011310312_Initial4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

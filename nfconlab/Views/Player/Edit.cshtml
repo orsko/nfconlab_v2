@@ -22,15 +22,7 @@
             @Html.EditorFor(model => model.User_ID)
             @Html.ValidationMessageFor(model => model.User_ID)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Answered)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Answered)
-            @Html.ValidationMessageFor(model => model.Answered)
-        </div>
-
+        @Html.HiddenFor(model => model.Answered)
         <div class="editor-label">
             @Html.LabelFor(model => model.Points)
         </div>

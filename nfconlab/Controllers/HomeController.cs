@@ -132,7 +132,8 @@ namespace nfconlab.Controllers
             {
                 userId = (string)Session["UserID"];
                 player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userId));
-                if (player.Answered!=null && player.Answered.Split(',').Contains(id.ToString()))
+                if(player != null && player.QuestionItems.Contains(db.Questions.Find(id)))
+                //if (player.Answered!=null && player.Answered.Split(',').Contains(id.ToString()))
                     return "Already answered question";
             }
             catch
@@ -165,6 +166,34 @@ namespace nfconlab.Controllers
                             + "}";
 
             return json.Data.ToString();
+        }
+
+        //
+        // GET: /Home/AllQuestions
+        // Minden kérdés lekérése
+        public string AllQuestions()
+        {
+
+            var json = string.Empty;
+            foreach (var questionitem in db.Questions)
+            {
+                json += "{"
+                             + "\"Answers\":"
+                             + "{"
+                             + "\"Answer1\":\"" + questionitem.Answer1 + "\","
+                             + "\"Answer2\":\"" + questionitem.Answer2 + "\","
+                             + "\"Answer3\":\"" + questionitem.Answer3 + "\","
+                             + "\"Answer4\":\"" + questionitem.Answer4 + "\","
+                             + "\"RightAnswer\":\"" + questionitem.RightAnswer + "\""
+                             + "},"
+                             + "\"Date\":\"" + questionitem.Date + "\","
+                             + "\"Image\":\"" + questionitem.Image + "\","
+                             + "\"Position\":\"" + questionitem.Location + "\","
+                             + "\"Question\":\"" + questionitem.Question + "\","                                                         
+                             + "\"QuestionItemId\":\"" + questionitem.QuestionItemId + "\""                             
+                             + "}\n";
+            }
+            return json;
         }
 
         //
@@ -213,7 +242,17 @@ namespace nfconlab.Controllers
                     //Vissza kell adni, hogy jó
                     code = "true";
                     //Hozzá kell adni a megválaszolt kérdésekhez
-                    player = AddPoint(questionitem, Session["UserID"]);
+                    try
+                    {
+                        string userid = (string) Session["UserID"];
+                        player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userid));
+                        player.QuestionItems.Add(questionitem);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    //player = AddPoint(questionitem, Session["UserID"]);
                 }
                 else
                 {
@@ -223,24 +262,30 @@ namespace nfconlab.Controllers
 
                 //Következő kérdés, ennek kell visszaadni a pozícióját
                 QuestionItem nextQuestion = null;
-
+                
                 //Megválaszolt kérdések
-                string[] answers = {""};
-                if (player.Answered != null)
+                if (player != null)
                 {
-                    answers = player.Answered.ToString().Split(',');
-                }
+                    QuestionItem[] answers = player.QuestionItems.ToArray();
 
-                foreach(var q in db.Questions)
-                {
-                    //Ha nem válaszolta még meg és van ilyen kérdés visszaadja
-                    if (!answers.Contains(q.QuestionItemId.ToString()) && q.QuestionItemId != id)
+                    QuestionItem[] questions = db.Questions.ToArray();
+
+                    foreach(var q in questions)
                     {
-                        nextQuestion = q;
-                        break;
+                        //Ha nem válaszolta még meg és van ilyen kérdés visszaadja
+                        if (!answers.Contains(q) && !q.Equals(questionitem))
+                        {
+                            nextQuestion = q;
+                                                    
+                            break;
+                        }
                     }
+
+                    //pont adás  
+                    player.Points += 1;
                 }
 
+                
                 string nextPos = "0.0,0.0";              
                 
                 if (nextQuestion != null)
@@ -252,6 +297,17 @@ namespace nfconlab.Controllers
                                      + "\"Response\":\"" + code + "\","
                                      + "\"Position\":\"" + nextPos + "\""
                               + "}";
+                if (player != null)
+                {
+                    player.Answered = "";
+                    foreach (var a in player.QuestionItems.ToArray())
+                    {
+                        player.Answered += a.QuestionItemId.ToString() + ",";
+                    }
+                }
+
+                db.SaveChanges();
+
                 return response.Data.ToString();
             }
             return "NULL JSON";

@@ -11,5 +11,6 @@ namespace nfconlab.Models
         public string User_ID { get; set; }
         public string Answered { get; set; }
         public int Points { get; set; }
+        public virtual ICollection<QuestionItem> QuestionItems { get; set; }
     }
 }

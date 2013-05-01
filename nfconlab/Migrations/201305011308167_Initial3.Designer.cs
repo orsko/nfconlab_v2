@@ -5,13 +5,13 @@ namespace nfconlab.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class Initial : IMigrationMetadata
+    public sealed partial class Initial3 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial3));
         
         string IMigrationMetadata.Id
         {
-            get { return "201304211459413_Initial"; }
+            get { return "201305011308167_Initial3"; }
         }
         
         string IMigrationMetadata.Source

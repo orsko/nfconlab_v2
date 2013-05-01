@@ -17,5 +17,6 @@ namespace nfconlab.Models
         public string Location { get; set; }
         public string Date { get; set; }
         public string Image { get; set; }
+        public virtual ICollection<PlayerItem> PlayerItems { get; set; }
     }
 }
