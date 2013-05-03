@@ -314,6 +314,74 @@ namespace nfconlab.Controllers
         }
 
         //
+        // GET: /Home/GetMyPoints
+
+        public string GetMyPoints()
+        {
+            var json = string.Empty;
+            try
+            {
+                //User ID lekérése
+                var uid = Session["UserID"].ToString();
+                //Játékos
+                var me = db.Players.FirstOrDefault(p => p.User_ID.Equals(uid));
+                //Sorrend
+                var all = (from p in db.Players
+                          orderby p.Points descending
+                          select p).ToList();
+                
+                //Ranglista pozíció (+1, hogy ne 0-tól kezdődjön)
+                int index = all.IndexOf(me) + 1;
+
+                //Pontjainak kiírása
+                json += "{"
+                        + "\"Points\":\"" + me.Points + "\","
+                        + "\"Position\":\"" + index + "\""
+                        + "}";
+
+                return json;
+            }
+            catch (Exception)
+            {
+                return "Not identified player";
+            }
+        }
+
+        //
+        // GET: /Home/GetTopPlayers
+
+        public string GetTopPlayers()
+        {
+            JsonResult json = new JsonResult();
+            try
+            {
+                var q = from p in db.Players
+                        orderby p.Points descending 
+                        select p;
+                var top = q.Take(10);
+                json.Data = "{"
+                            + "\"players\":"
+                            + "[";
+
+                foreach (var player in top)
+                {
+                    json.Data += "{"
+                                + "\"Id\":\"" + player.User_ID + "\","
+                                + "\"Points\":\"" + player.Points + "\""
+                                + "},";               
+                }
+                json.Data = json.Data.ToString().Remove(json.Data.ToString().Length - 1);
+                json.Data += "]"
+                           + "}";
+                return json.Data.ToString();
+            }
+            catch (Exception)
+            {
+                return "Somethong went wrong";
+            }
+        }
+
+        //
         // GET: /Home/Create
         [Authorize(Roles = "admin")]
         public ActionResult Create()

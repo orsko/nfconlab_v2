@@ -1,0 +1,31 @@
+﻿@model IEnumerable<nfconlab.Models.PlayerItem>
+
+@{
+    ViewBag.Title = "MyStats";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Általam megválaszolt kérdések</h2>
+<h3>@TempData["FacebookName"]</h3>
+<br/>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionItems.Single().Question)
+        </th>
+    </tr>
+
+@foreach (var item in Model)
+{   
+        foreach (var q in item.QuestionItems)
+        { 
+          <tr>                
+            <td>
+                @Html.DisplayFor(modelItem => q.Question)
+            </td>   
+          </tr>
+        }
+    
+}
+
+</table>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Transactions;
 using System.Web;
@@ -10,6 +11,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using nfconlab.Filters;
 using nfconlab.Models;
+using Facebook;
 
 namespace nfconlab.Controllers
 {
@@ -327,6 +329,91 @@ namespace nfconlab.Controllers
             ViewBag.ShowRemoveButton = externalLogins.Count > 1 || OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             return PartialView("_RemoveExternalLoginsPartial", externalLogins);
         }
+
+        //
+        // GET: /Account/FbLogin
+
+        [AllowAnonymous]
+        public ActionResult FbLogin()
+        {
+            // Build the Return URI form the Request Url
+            var redirectUri = new UriBuilder(Request.Url);
+            redirectUri.Path = Url.Action("FbAuth", "Account");
+
+            var client = new FacebookClient();
+
+            // Generate the Facebook OAuth URL
+            // Example: https://www.facebook.com/dialog/oauth?
+            //                client_id=YOUR_APP_ID
+            //               &redirect_uri=YOUR_REDIRECT_URI
+            //               &scope=COMMA_SEPARATED_LIST_OF_PERMISSION_NAMES
+            //               &state=SOME_ARBITRARY_BUT_UNIQUE_STRING
+
+            var uri = client.GetLoginUrl(new
+            {
+                client_id = ConfigurationManager.AppSettings["FacebookAppId"],
+                redirect_uri = redirectUri.Uri.AbsoluteUri,
+                scope = "email,read_stream,user_about_me",
+            });
+            return Redirect(uri.ToString());
+        }
+
+        //
+        // GET: /Account/FbAuth
+        [AllowAnonymous]
+        public ActionResult FbAuth(string returnUrl)
+        {
+            var client = new FacebookClient();
+            var oauthResult = client.ParseOAuthCallbackUrl(Request.Url);
+            // Build the Return URI form the Request Url
+            var redirectUri = new UriBuilder(Request.Url);
+            redirectUri.Path = Url.Action("FbAuth", "Account");
+
+            // Exchange the code for an access token
+            dynamic result = client.Get("/oauth/access_token", new
+            {
+                client_id = ConfigurationManager.AppSettings["FacebookAppId"],
+                redirect_uri = redirectUri.Uri.AbsoluteUri,
+                client_secret = ConfigurationManager.AppSettings["FacebookAppSecret"],
+                code = oauthResult.Code,
+            });
+
+            // Read the auth values
+            string accessToken = result.access_token;
+            DateTime expires = DateTime.UtcNow.AddSeconds(Convert.ToDouble(result.expires));
+
+            // Get the user's profile information
+            dynamic me = client.Get("/me",
+                          new
+                          {
+                              fields = "first_name,last_name,email",
+                              access_token = accessToken
+                          });
+
+            // Read the Facebook user values
+            long facebookId = Convert.ToInt64(me.id);
+            string firstName = me.first_name;
+            string lastName = me.last_name;
+            string email = me.email;
+
+            // Add the user to our persistent store
+            TempData["FacebookId"] = facebookId;
+            TempData["FacebookName"] = lastName + " " + firstName;
+            
+            // Set the Auth Cookie
+            //FormsAuthentication.SetAuthCookie(email, false);
+
+            // Redirect to the return url if availible
+            //if (String.IsNullOrEmpty(returnUrl))
+            //{
+                return Redirect("/Player/MyStats");
+            //}
+            //else
+            //{
+            //    return Redirect(returnUrl);
+            //}
+        }
+
 
         #region Helpers
         private ActionResult RedirectToLocal(string returnUrl)

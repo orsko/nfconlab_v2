@@ -114,6 +114,25 @@ namespace nfconlab.Controllers
             return RedirectToAction("Index");
         }
 
+        //
+        // GET: /Player/MyStats
+
+        public ActionResult MyStats()
+        {
+            try
+            {
+                string uid = TempData["FacebookId"].ToString();
+                var me = from p in db.Players
+                         where p.User_ID.Equals(uid)
+                         select p;
+                return View(me.ToList());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
