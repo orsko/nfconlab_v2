@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201305011310312_Initial4.Designer.cs">
       <DependentUpon>201305011310312_Initial4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201305091852426_Initial5.cs" />
+    <Compile Include="Migrations\201305091852426_Initial5.Designer.cs">
+      <DependentUpon>201305091852426_Initial5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\PlayerItem.cs" />
@@ -351,6 +355,9 @@
     <EmbeddedResource Include="Migrations\201305011310312_Initial4.resx">
       <DependentUpon>201305011310312_Initial4.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201305091852426_Initial5.resx">
+      <DependentUpon>201305091852426_Initial5.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -368,7 +375,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>56208</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61550/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

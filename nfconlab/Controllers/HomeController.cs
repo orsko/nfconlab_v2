@@ -67,16 +67,14 @@ namespace nfconlab.Controllers
                 //Felhasználó eltárolása
                 if (json.UserID.Equals("Semmi"))
                     return "User identification failed: NOT VALID USER";
-                int id = int.Parse(json.UserID);
-                Session["UserID"] = json.UserID;
+                long id = long.Parse(json.UserID);
+                Session["UserID"] = long.Parse(json.UserID);
                 Session["Date"] = json.Date;
                 //Sikeres azonosítás
                 //Ha van ilyen felhasználó kész
                 PlayerItem player = null;
 
-                string uid = "" + id;
-
-                player = db.Players.FirstOrDefault(p => p.User_ID.Equals(uid));
+                player = db.Players.FirstOrDefault(p => p.User_ID.Equals(id));
 
 
                 if (player != null)
@@ -84,7 +82,7 @@ namespace nfconlab.Controllers
                 //Ha nincs, csinálni kell
                 db.Players.Add(new PlayerItem
                 {
-                    User_ID = "" + id
+                    User_ID = id
                 });
                 db.SaveChanges();
                 return "New user added";
@@ -100,7 +98,7 @@ namespace nfconlab.Controllers
         public PlayerItem AddPoint(QuestionItem question, object userId)
         {
             PlayerItem player = null;
-            string uid = (string)userId;
+            long uid = (long)userId;
             //Játékos lekérése
             try
             {
@@ -127,18 +125,24 @@ namespace nfconlab.Controllers
         {
             //Csak olyan kérdést szabas, mi még nincs megválaszolva
             PlayerItem player = null;
-            string userId = "";
+            long userId;
             try
             {
-                userId = (string)Session["UserID"];
+                userId = (long)Session["UserID"];
                 player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userId));
-                if(player != null && player.QuestionItems.Contains(db.Questions.Find(id)))
+                if (player != null && player.QuestionItems.Contains(db.Questions.Find(id)))
+                {
+                    /*************************TESZTHEZ NEM KELL***********************************
+                     *return "Already answered question";
+                     */
+                }
                 //if (player.Answered!=null && player.Answered.Split(',').Contains(id.ToString()))
-                    return "Already answered question";
+
+                    
             }
             catch
             {
-                return userId + "Not identified player";
+                return "Not identified player";
             }
 
             //Kérdés lekérése az adatbázisból
@@ -232,37 +236,44 @@ namespace nfconlab.Controllers
                 //Válasz eltárolása
                 string answer = json.Answer;
 
-                //Helyes válasz vizsgálata
-                QuestionItem questionitem = db.Questions.Find(id);
-                string code = "false";
-                //Ha helyes a válasz
+                //Ha már megválaszolta, nem lehet többször
                 PlayerItem player = null;
+                try
+                {
+                    long userid = (long)Session["UserID"];
+                    player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userid));                  
+                }
+                catch
+                {
+                    return "Not identified player";
+                }
+               
+                QuestionItem questionitem = db.Questions.Find(id);
+                if (player.QuestionItems.Contains(questionitem))
+                {
+                    return "Already answered question";
+                }
+                player.QuestionItems.Add(questionitem);
+                string code = "false";
+
+                //Helyes válasz vizsgálata
                 if (questionitem.RightAnswer.Equals(answer))
                 {
                     //Vissza kell adni, hogy jó
                     code = "true";
                     //Hozzá kell adni a megválaszolt kérdésekhez
-                    try
-                    {
-                        string userid = (string) Session["UserID"];
-                        player = db.Players.FirstOrDefault(p => p.User_ID.Equals(userid));
-                        player.QuestionItems.Add(questionitem);
-                    }
-                    catch
-                    {
-                        throw;
-                    }
+                    player.QuestionItems.Add(questionitem);
                     //player = AddPoint(questionitem, Session["UserID"]);
                 }
                 else
                 {
-                    string uID = (string)Session["UserID"];
+                    long uID = (long)Session["UserID"];
                     player = db.Players.FirstOrDefault(p => p.User_ID.Equals(uID));
                 }
 
                 //Következő kérdés, ennek kell visszaadni a pozícióját
                 QuestionItem nextQuestion = null;
-                
+                               
                 //Megválaszolt kérdések
                 if (player != null)
                 {
@@ -322,7 +333,7 @@ namespace nfconlab.Controllers
             try
             {
                 //User ID lekérése
-                var uid = Session["UserID"].ToString();
+                var uid = (long)Session["UserID"];
                 //Játékos
                 var me = db.Players.FirstOrDefault(p => p.User_ID.Equals(uid));
                 //Sorrend
@@ -369,6 +380,37 @@ namespace nfconlab.Controllers
                                 + "\"Id\":\"" + player.User_ID + "\","
                                 + "\"Points\":\"" + player.Points + "\""
                                 + "},";               
+                }
+                json.Data = json.Data.ToString().Remove(json.Data.ToString().Length - 1);
+                json.Data += "]"
+                           + "}";
+                return json.Data.ToString();
+            }
+            catch (Exception)
+            {
+                return "Something went wrong";
+            }
+        }
+
+        //
+        // GET: /Home/GetMyCoordinates
+
+        public string GetMyCoordinates()
+        {
+            JsonResult json = new JsonResult();
+            try
+            {
+                long uid = (long)Session["UserID"];
+                var me = db.Players.FirstOrDefault(p => p.User_ID.Equals(uid));                
+                json.Data = "{"
+                            + "\"Coordinates\":"
+                            + "[";
+
+                foreach (var q in me.QuestionItems)
+                {
+                    json.Data += "{"
+                                + "\"Location\":\"" + q.Location + "\""
+                                + "},";
                 }
                 json.Data = json.Data.ToString().Remove(json.Data.ToString().Length - 1);
                 json.Data += "]"

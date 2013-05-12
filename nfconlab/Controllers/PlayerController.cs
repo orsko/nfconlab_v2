@@ -121,7 +121,7 @@ namespace nfconlab.Controllers
         {
             try
             {
-                string uid = TempData["FacebookId"].ToString();
+                long uid = long.Parse(TempData["FacebookId"].ToString());
                 var me = from p in db.Players
                          where p.User_ID.Equals(uid)
                          select p;
